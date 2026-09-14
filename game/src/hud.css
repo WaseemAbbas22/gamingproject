@@ -1,0 +1,385 @@
+/* Speed stays on the right; never sit in the middle of the road view. */
+.speedo{
+  left:auto; right:18px; bottom:18px; transform:none;
+  width:auto; min-width:120px; height:auto; border-radius:16px;
+  padding:10px 16px 12px;
+  background:linear-gradient(180deg,rgba(8,12,18,.62),rgba(4,6,10,.88));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 10px 40px rgba(0,0,0,.45);
+  display:flex; flex-direction:column; align-items:center;
+}
+.speedoPos{
+  display:flex; align-items:flex-start; justify-content:center;
+  gap:1px; margin-bottom:2px;
+  color:#ffb020;
+  font:900 28px 'Orbitron',sans-serif;
+  letter-spacing:1px;
+  line-height:1;
+}
+.speedoPos #placeVal{font-size:28px;}
+.speedoPos #placeOrd{
+  font-size:12px; font-weight:800; margin-top:4px; letter-spacing:0.5px;
+  color:#ffd080;
+}
+.speedo .num{
+  font:900 40px 'Orbitron',sans-serif; letter-spacing:1px; color:#eef2f6; line-height:1;
+}
+.speedo .unit{
+  margin-top:4px; font:800 11px 'Orbitron',sans-serif; letter-spacing:2px; color:#9eb0c2;
+}
+.gearbox{display:none !important;}
+.tach{
+  width:100%; height:8px; border-radius:99px; margin-bottom:6px;
+  background:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,59,48,.95) 88%,#fff 100%);
+  overflow:hidden;
+}
+.tach > i{
+  display:block; height:100%; width:0;
+  background:rgba(0,0,0,.45);
+  margin-left:auto;
+}
+.standings{display:none !important;}
+.posbox{display:none !important;}
+.minimap{
+  position:relative;
+  display:block;
+  margin-top:8px;
+  width:148px; height:148px;
+  background:rgba(6,10,16,.72);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.lapbox .label{letter-spacing:3px;}
+.carArt{position:relative; overflow:hidden;}
+.carArt.photoArt::before,.carArt.photoArt::after,
+.carArt.apexArt::before,.carArt.apexArt::after{display:none !important;}
+.carArt svg{
+  position:absolute; inset:6px 8px; width:calc(100% - 16px); height:calc(100% - 12px);
+  filter:drop-shadow(0 6px 6px rgba(0,0,0,.75));
+}
+.trackPreview canvas{
+  position:absolute; inset:0; width:100%; height:100%;
+}
+.trackPreview .routeLabel{
+  position:relative; z-index:1; pointer-events:none;
+  font:800 11px Orbitron,sans-serif; letter-spacing:1px;
+  text-shadow:0 1px 4px #000;
+}
+.startbtn,.storeGarageBtn{pointer-events:auto; position:relative; z-index:2;}
+#menuBusy{
+  position:fixed; inset:0; z-index:70; display:none; align-items:center; justify-content:center;
+  background:rgba(5,7,11,.72); color:#eef2f6; font-family:'Orbitron',sans-serif; letter-spacing:2px;
+}
+#menuBusy.show{display:flex;}
+#bootOverlay{
+  position:fixed; inset:0; z-index:80; display:flex; align-items:center; justify-content:center;
+  background:#05070b; color:#eef2f6; font-family:'Orbitron',sans-serif;
+  letter-spacing:3px; pointer-events:none;
+}
+#bootOverlay small{display:block; margin-top:10px; color:#7c8896; letter-spacing:1px; font-family:'Rajdhani',sans-serif;}
+
+.hud .brand .driverTag{
+  display:block; margin-top:4px; font:700 10px 'Rajdhani',sans-serif;
+  letter-spacing:1.5px; color:#ffb020; opacity:.95;
+}
+.splashScreen,.introScreen{
+  position:fixed; inset:0; z-index:86;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; padding:24px;
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(255,59,48,.22), rgba(7,9,12,.96) 58%),
+    #07090c;
+}
+.splashScreen.hidden,.introScreen.hidden{display:none;}
+.splashLogo{
+  filter:drop-shadow(0 0 28px rgba(255,59,48,.35));
+}
+.splashTitle{
+  font:900 42px 'Orbitron',sans-serif; letter-spacing:6px; color:#eef2f6;
+}
+.splashTitle span{color:#ff3b30;}
+.splashScreen small,.introCopy{
+  color:#9eb0c2; letter-spacing:3px; font:600 13px 'Rajdhani',sans-serif;
+}
+.introCopy{
+  max-width:420px; text-align:center; letter-spacing:1px; line-height:1.5; font-size:16px;
+}
+.introScreen .startbtn{min-width:220px; margin-top:8px;}
+.nameSlide{
+  position:fixed; left:0; right:0; top:0; z-index:125;
+  display:flex; justify-content:center; pointer-events:none;
+  transform:translateY(-110%);
+  transition:transform .42s cubic-bezier(.22,.9,.28,1);
+}
+.nameSlide.show{
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.nameSlideInner{
+  width:min(420px,100%);
+  margin:0;
+  padding:18px 16px 16px;
+  padding-top:max(18px, env(safe-area-inset-top));
+  border-radius:0 0 16px 16px;
+  border:1px solid rgba(255,90,18,.45);
+  border-top:none;
+  background:linear-gradient(180deg,rgba(18,12,10,.98),rgba(7,9,12,.96));
+  box-shadow:0 18px 40px rgba(0,0,0,.55);
+  text-align:center;
+}
+.nameSlideTitle{
+  font:900 13px 'Orbitron',sans-serif; letter-spacing:2px; color:#ff3b30; margin-bottom:10px;
+}
+.nameSlide .nameInput{width:min(300px,92%); margin:0 auto;}
+.nameSlideActions{
+  display:flex; justify-content:center; gap:10px; margin-top:14px;
+}
+.nameSlideActions .storeGarageBtn,.nameSlideActions .startbtn{
+  min-height:44px; min-width:110px;
+}
+.nameLabel{
+  margin-top:14px; font:800 11px 'Orbitron',sans-serif; letter-spacing:2px; color:#ffb020;
+}
+.nameInput{
+  width:min(280px,86vw); margin-top:8px; padding:12px 14px;
+  border-radius:10px; border:1px solid rgba(255,176,32,.45);
+  background:rgba(7,9,12,.92); color:#eef2f6;
+  font:700 18px 'Rajdhani',sans-serif; text-align:center; outline:none;
+}
+.nameInput:focus{border-color:#ff3b30; box-shadow:0 0 0 2px rgba(255,59,48,.25);}
+.nameError{color:#ff6b63; font:700 13px 'Rajdhani',sans-serif; margin:8px 0 0;}
+.historyLinkBtn{margin-top:12px; min-width:220px;}
+.testAdOverlay{
+  position:fixed; inset:0; z-index:130; display:none; align-items:center; justify-content:center;
+  padding:18px; background:rgba(2,4,8,.88);
+}
+.testAdOverlay.show{display:flex;}
+.testAdCard{
+  width:min(420px,100%); padding:28px 22px 22px; text-align:center;
+  border:1px solid rgba(255,176,32,.5); border-radius:16px;
+  background:linear-gradient(165deg,#1a140c,#07090c);
+  box-shadow:0 24px 70px rgba(0,0,0,.7);
+}
+.testAdBadge{
+  display:inline-block; padding:4px 10px; border-radius:999px;
+  background:#ffb020; color:#1a1004; font:900 10px 'Orbitron',sans-serif; letter-spacing:1px;
+}
+.testAdTitle{margin-top:14px; font:900 18px 'Orbitron',sans-serif; letter-spacing:2px; color:#fff;}
+.testAdBody{margin-top:8px; color:#c5ced8; font:600 15px 'Rajdhani',sans-serif; line-height:1.4;}
+.testAdTimer{
+  margin:18px auto 14px; width:72px; height:72px; border-radius:50%;
+  display:grid; place-items:center;
+  border:3px solid #ff3b30; color:#ffb020;
+  font:900 28px 'Orbitron',sans-serif;
+}
+.testAdCard .startbtn:disabled{opacity:.45; pointer-events:none;}
+.historyPanel{
+  position:fixed; inset:0; z-index:115; display:none; align-items:center; justify-content:center;
+  padding:18px; background:rgba(4,6,10,.78);
+}
+.historyPanel.open{display:flex;}
+.historyCard{
+  position:relative; width:min(440px,100%); max-height:min(78vh,640px);
+  padding:26px 20px 18px; overflow:auto;
+  border:1px solid rgba(255,90,18,.4); border-radius:16px;
+  background:linear-gradient(160deg,rgba(22,16,14,.98),rgba(7,9,12,.98));
+}
+.historyDriver{color:#ffb020; font:700 15px 'Rajdhani',sans-serif; margin-bottom:12px;}
+.historyList{display:flex; flex-direction:column; gap:8px;}
+.historyRow{
+  display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+  padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.08);
+  font:600 14px 'Rajdhani',sans-serif; color:#eef2f6;
+}
+.historyRow strong{display:block; font:800 13px 'Orbitron',sans-serif; letter-spacing:1px;}
+.historyRow span{color:#9aa7b5; text-align:right; white-space:nowrap;}
+.historyEmpty{color:#7c8896; font:600 15px 'Rajdhani',sans-serif; padding:18px 4px;}
+
+.themeModal{
+  position:fixed; inset:0; z-index:120; display:none; align-items:center; justify-content:center;
+  padding:18px; background:rgba(4,6,10,.72);
+}
+.themeModal.show{display:flex;}
+.themeModalCard{
+  width:min(440px,100%);
+  padding:26px 22px 20px;
+  border:1px solid rgba(255,90,18,.45);
+  border-radius:16px;
+  background:linear-gradient(160deg,rgba(22,16,14,.98),rgba(7,9,12,.98));
+  box-shadow:0 0 0 1px rgba(255,59,48,.18), 0 24px 70px rgba(0,0,0,.65);
+}
+.themeModalTitle{
+  font:900 18px 'Orbitron',sans-serif; letter-spacing:3px; color:#ff3b30; margin-bottom:12px;
+}
+.themeModalBody{
+  color:#eef2f6; font:600 16px 'Rajdhani',sans-serif; line-height:1.5; white-space:pre-line;
+}
+.themeModalActions{
+  display:flex; justify-content:flex-end; gap:10px; margin-top:20px;
+}
+.themeModalActions .storeGarageBtn,.themeModalActions .startbtn{
+  min-height:46px; min-width:110px;
+}
+
+.cardAdBtn{
+  display:block; margin-top:8px; padding:7px 8px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#6a3a10,#2a1608);
+  border:1px solid #ffb020;
+  color:#ffe7a8;
+  font:800 9px 'Orbitron',sans-serif; letter-spacing:.3px; text-align:center;
+  pointer-events:auto; cursor:pointer; position:relative; z-index:3;
+}
+.cardAdBtn:active{transform:scale(.97); background:#7a4814;}
+.carChoice.locked{opacity:1; filter:none; cursor:default;}
+.carChoice.locked .carArt,
+.carChoice.locked .carName,
+.carChoice.locked .carMeta{opacity:.55; filter:saturate(.45);}
+.carChoice.locked .cardAdBtn{opacity:1 !important; filter:none !important;}
+
+.steerWrap{
+  position:absolute;
+  left:20px; bottom:18px;
+  width:150px; height:168px;
+  pointer-events:auto;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  touch-action:none;
+}
+.steerWrap small{
+  color:rgba(238,242,246,.7); font:700 10px 'Orbitron',sans-serif; letter-spacing:2px;
+}
+.steeringWheel{
+  width:132px; height:132px; border-radius:50%;
+  border:0;
+  background:transparent;
+  box-shadow:0 10px 24px rgba(0,0,0,.45);
+  display:flex; align-items:center; justify-content:center;
+  touch-action:none;
+}
+.wheelArt{
+  width:100%; height:100%;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.55));
+  pointer-events:none;
+}
+.wheelHub{display:none;}
+.pedals{
+  position:absolute;
+  right:16px; bottom:16px;
+  display:flex; align-items:flex-end; gap:16px;
+  pointer-events:auto;
+}
+.pedal{
+  width:74px; height:126px; padding:0; border:0;
+  background:transparent; box-shadow:none;
+  color:#fff; cursor:pointer; pointer-events:auto;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  touch-action:none;
+}
+.pedalArt{
+  width:70px; height:104px;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.65));
+  pointer-events:none;
+}
+.pedal b{font:800 10px 'Orbitron',sans-serif; letter-spacing:1px; margin-top:2px;}
+.pedal-gas b{color:#7dff8a; text-shadow:0 0 8px rgba(80,220,90,.45);}
+.pedal-brake b{color:#ff8a8a; text-shadow:0 0 8px rgba(255,80,80,.4);}
+.pedal.pressed,.pedal:active{transform:translateY(5px); filter:brightness(1.12);}
+.bannerSlot{display:none !important;}
+.dockAdGap{pointer-events:none;}
+.garageDock{pointer-events:auto;}
+
+@media (pointer:coarse), (max-width:900px){
+  .posbox{display:none !important;}
+  .speedo{
+    left:auto !important;
+    right:calc(12px + env(safe-area-inset-right)) !important;
+    top:38%;
+    bottom:auto !important;
+    transform:translateY(-50%) !important;
+    width:auto !important;
+    min-width:88px;
+    height:auto !important;
+    border-radius:14px;
+    padding:8px 12px;
+  }
+  .speedo .num{font-size:26px;}
+  .speedoPos #placeVal{font-size:22px;}
+  .speedoPos #placeOrd{font-size:10px;}
+  .standings{display:none !important;}
+  .minimap{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    width:108px !important;
+    height:108px !important;
+    margin-top:6px;
+  }
+  #btnRear{
+    width:54px; height:36px; font-size:11px;
+    right:calc(10px + env(safe-area-inset-right));
+    top:calc(52px + env(safe-area-inset-top));
+  }
+  .steerWrap{
+    left: calc(10px + env(safe-area-inset-left));
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    width: 120px;
+    height: 138px;
+  }
+  .steeringWheel{width:110px; height:110px;}
+  .pedals{
+    right: calc(10px + env(safe-area-inset-right));
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    gap: 12px;
+  }
+  .pedal{width:70px; height:120px;}
+  .pedalArt{width:66px; height:100px;}
+}
+
+@media (pointer:coarse) and (orientation:landscape){
+  .garageHeading .title{font-size:20px; letter-spacing:2px;}
+  .garageHeading .subtitle{font-size:11px;}
+  .garageGrid{gap:8px; margin:8px 0 6px;}
+  .carArt,.carArt.trackPreview{height:48px; margin:2px 0 6px;}
+  .carChoice{min-height:0; padding:8px 7px;}
+  .carName{font-size:12px;}
+  .carMeta{font-size:10px;}
+  .cardAdBtn{font-size:8px; padding:5px 6px;}
+  .bannerSlot{display:none !important;}
+  .garageDock{min-height:58px;}
+  .dockAdGap{height:44px; max-width:180px;}
+  .garageHint{font-size:12px;}
+}
+
+.raceAdBanner{
+  display:none;
+  position:fixed;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  z-index:16;
+  width:min(260px, 40vw);
+  height:40px;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  background:linear-gradient(180deg,#1a222c,#0d1218);
+  border:1px solid rgba(255,176,32,.45);
+  box-shadow:0 6px 18px rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.raceAdBanner.show{display:flex;}
+.raceAdBanner span{
+  font:800 10px 'Orbitron',sans-serif;
+  letter-spacing:1.5px;
+  color:#ffd080;
+}
+@media (pointer:coarse), (max-width:900px){
+  .raceAdBanner{
+    bottom:calc(8px + env(safe-area-inset-bottom));
+    width:min(220px, 36vw);
+    height:36px;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "forza-legends-playcanvas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8080",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "playcanvas": "^2.11.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3"
+  }
+}

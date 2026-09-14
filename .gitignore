@@ -1,0 +1,16 @@
+*.iml
+/build
+/.gradle
+/app/build
+/game/node_modules
+/game/dist
+/game/.vite
+/local.properties
+.idea/
+.cursor/
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+/package-lock.json

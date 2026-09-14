@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.ForzaLegends" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#07090c</item>
+        <item name="android:colorBackground">#07090c</item>
+        <item name="android:navigationBarColor">#07090c</item>
+        <item name="android:statusBarColor">#07090c</item>
+    </style>
+</resources>

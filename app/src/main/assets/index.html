@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Forza Legends — 3D Racing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07090c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+  <script defer src="./pc/index-CwNpkluI.js"></script>
+</head>
+<body>
+<div id="bootOverlay"><div>FORZA LEGENDS<small>Loading PBR / HDR scene…</small></div></div>
+<div id="menuBusy">PREPARING RACE…</div>
+<div class="splashScreen" id="splashScreen">
+  <div class="splashLogo" aria-hidden="true">
+    <svg viewBox="0 0 160 160" width="148" height="148">
+      <circle cx="80" cy="80" r="76" fill="#07090c" stroke="#ff3b30" stroke-width="4"/>
+      <path d="M22 98 L40 72 Q62 52 86 50 L112 38 Q124 34 136 48 L148 70 Q152 82 146 96 L140 108 L28 108Z" fill="#ff5a12" stroke="#ffb06a" stroke-width="2"/>
+      <path d="M78 68 L96 46 Q108 40 122 46 L136 64Z" fill="#7ec8ff"/>
+      <circle cx="50" cy="108" r="12" fill="#111"/><circle cx="122" cy="108" r="12" fill="#111"/>
+    </svg>
+  </div>
+  <div class="splashTitle">FORZA <span>LEGENDS</span></div>
+  <small>RACING</small>
+</div>
+<div class="introScreen hidden" id="introScreen">
+  <div class="splashLogo" aria-hidden="true">
+    <svg viewBox="0 0 160 160" width="120" height="120">
+      <circle cx="80" cy="80" r="76" fill="#07090c" stroke="#ff3b30" stroke-width="4"/>
+      <path d="M22 98 L40 72 Q62 52 86 50 L112 38 Q124 34 136 48 L148 70 Q152 82 146 96 L140 108 L28 108Z" fill="#ff5a12" stroke="#ffb06a" stroke-width="2"/>
+      <path d="M78 68 L96 46 Q108 40 122 46 L136 64Z" fill="#7ec8ff"/>
+      <circle cx="50" cy="108" r="12" fill="#111"/><circle cx="122" cy="108" r="12" fill="#111"/>
+    </svg>
+  </div>
+  <div class="splashTitle">FORZA <span>LEGENDS</span></div>
+  <p class="introCopy" id="introWelcome">Choose your machine, pick a circuit, then hit the grid.</p>
+  <button class="startbtn" id="introStartBtn" type="button">START</button>
+  <button class="miniBtn historyLinkBtn" id="introHistoryBtn" type="button">RACE HISTORY</button>
+</div>
+<div class="nameSlide" id="nameSlide" aria-hidden="true">
+  <div class="nameSlideInner">
+    <div class="nameSlideTitle">ENTER RACER NAME</div>
+    <input class="nameInput" id="playerNameInput" type="text" maxlength="16" placeholder="Your name" autocomplete="nickname" enterkeyhint="done">
+    <p class="nameError" id="nameError" hidden>Please enter a name (2–16 characters).</p>
+    <div class="nameSlideActions">
+      <button class="storeGarageBtn" id="nameSlideCancel" type="button">CANCEL</button>
+      <button class="startbtn" id="nameSlideConfirm" type="button">CONTINUE</button>
+    </div>
+  </div>
+</div>
+<div class="testAdOverlay" id="testAdOverlay" aria-hidden="true">
+  <div class="testAdCard">
+    <div class="testAdBadge">TEST AD</div>
+    <div class="testAdTitle" id="testAdTitle">Rewarded Video</div>
+    <div class="testAdBody" id="testAdBody">Watch this test ad to earn coins.</div>
+    <div class="testAdTimer" id="testAdTimer">5</div>
+    <button class="startbtn" id="testAdCloseBtn" type="button" disabled>CLAIM REWARD</button>
+  </div>
+</div>
+<div class="historyPanel" id="historyPanel">
+  <div class="historyCard">
+    <button class="closeSettings" id="closeHistory" aria-label="Close history">×</button>
+    <div class="settingsTitle">RACE HISTORY</div>
+    <div class="historyDriver" id="historyDriver">Driver: —</div>
+    <div class="historyList" id="historyList"></div>
+    <button class="miniBtn" id="clearHistoryBtn" type="button" style="width:100%;margin-top:12px;">CLEAR HISTORY</button>
+  </div>
+</div>
+<div class="themeModal" id="themeModal">
+  <div class="themeModalCard">
+    <div class="themeModalTitle" id="themeModalTitle">CONFIRM</div>
+    <div class="themeModalBody" id="themeModalBody"></div>
+    <div class="themeModalActions">
+      <button class="storeGarageBtn" id="themeModalCancel" type="button">CANCEL</button>
+      <button class="startbtn" id="themeModalOk" type="button">OK</button>
+    </div>
+  </div>
+</div>
+<div id="canvasWrap"><canvas id="gameCanvas"></canvas></div>
+<div id="colorGrade"></div>
+<div id="speedVignette"></div>
+
+<div class="hud">
+  <div class="topbar">
+    <div>
+      <div class="brand">FORZA <span>LEGENDS</span></div>
+      <div class="toprow-right" style="margin-top:8px;">
+        <div class="lapbox"><div class="label">FINAL LAP</div><div class="value" id="lapVal">1/2</div></div>
+      </div>
+      <canvas class="minimap" id="minimap" width="150" height="150"></canvas>
+      <div class="standings" id="standings" style="display:none;"></div>
+    </div>
+    <div class="toprow-right">
+      <div class="lapbox"><div class="label">Coins</div><div class="value" id="coinsVal">0</div></div>
+      <div class="lapbox"><div class="label">Time</div><div class="value" id="timeVal">00:00.0</div></div>
+      <button class="settingsbtn" id="settingsBtn" aria-label="Open settings">⚙</button>
+      <button class="settingsbtn" id="storeBtn" aria-label="Open store">🛒</button>
+    </div>
+  </div>
+  <div class="msgcenter" id="msgCenter"></div>
+  <div id="rearViewIndicator" style="display:none;position:absolute;top:72px;left:50%;transform:translateX(-50%);padding:7px 12px;border:1px solid rgba(255,176,32,.55);border-radius:8px;background:rgba(7,10,15,.86);color:#ffb020;font:700 11px 'Orbitron',sans-serif;letter-spacing:2px;">REAR VIEW · B</div>
+  <div class="speedo">
+    <div class="tach"><i id="tachFill"></i></div>
+    <div class="speedoPos"><span id="placeVal">1</span><sup id="placeOrd">st</sup></div>
+    <div class="num" id="speedVal">0</div>
+    <div class="unit">KM/H</div>
+  </div>
+</div>
+<div class="raceAdBanner" id="raceAdBanner" aria-hidden="true">
+  <span>TEST AD · 320×50</span>
+</div>
+
+<div class="settingsPanel" id="settingsPanel">
+  <div class="settingsCard">
+    <button class="closeSettings" id="closeSettings" aria-label="Close settings">×</button>
+    <div class="settingsTitle">GAME SETTINGS</div>
+    <div class="settingRow">
+      <label for="graphicsSelect">Graphics quality</label>
+      <select class="qualitySelect" id="graphicsSelect">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high" selected>High</option>
+      </select>
+    </div>
+    <div class="settingRow">
+      <label for="fpsSelect">Frame rate</label>
+      <select class="qualitySelect" id="fpsSelect">
+        <option value="30">30 FPS</option>
+        <option value="45">45 FPS</option>
+        <option value="60" selected>60 FPS</option>
+      </select>
+    </div>
+    <div class="settingRow"><span>Race status</span><strong id="pauseStatus" style="color:var(--good)">MENU</strong></div>
+    <div class="settingRow">
+      <label for="muteToggle">Sound</label>
+      <select class="qualitySelect" id="muteToggle">
+        <option value="on" selected>On</option>
+        <option value="off">Mute</option>
+      </select>
+    </div>
+    <div class="settingRow"><span>Driver</span><strong id="settingsDriverName">—</strong></div>
+    <button class="miniBtn" id="settingsHistoryBtn" type="button" style="width:100%;margin-bottom:10px;">RACE HISTORY</button>
+    <button class="miniBtn" id="changeNameBtn" type="button" style="width:100%;margin-bottom:10px;">CHANGE NAME</button>
+    <button class="exitbtn" id="exitBtn">EXIT TO MENU</button>
+  </div>
+</div>
+
+<div class="controlGuide">
+  <b>CONTROLS</b>
+  <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span>
+  <span>or</span>
+  <span class="key">↑</span><span class="key">←</span><span class="key">↓</span><span class="key">→</span>
+  <span style="margin-left:8px;">HOLD BACK</span><span class="key">B</span>
+</div>
+<div class="touchctrl" id="touchctrl">
+  <div class="steerWrap" id="steerWrap">
+    <div class="steeringWheel" id="steeringWheel" role="slider" aria-label="Steering wheel">
+      <svg class="wheelArt" viewBox="0 0 160 160" aria-hidden="true">
+        <defs>
+          <linearGradient id="rimMetal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d8dee6"/><stop offset=".45" stop-color="#7a848f"/><stop offset="1" stop-color="#f2f5f8"/>
+          </linearGradient>
+          <linearGradient id="gripDark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2a2e34"/><stop offset="1" stop-color="#0c0e12"/>
+          </linearGradient>
+        </defs>
+        <circle cx="80" cy="80" r="74" fill="none" stroke="url(#rimMetal)" stroke-width="14"/>
+        <circle cx="80" cy="80" r="66" fill="none" stroke="#111418" stroke-width="6"/>
+        <circle cx="80" cy="80" r="58" fill="none" stroke="#c41e1e" stroke-width="3" opacity=".85"/>
+        <path d="M80 28 L92 72 L80 80 L68 72Z" fill="url(#gripDark)"/>
+        <path d="M28 96 L68 80 L72 92 L36 118Z" fill="url(#gripDark)"/>
+        <path d="M132 96 L92 80 L88 92 L124 118Z" fill="url(#gripDark)"/>
+        <circle cx="80" cy="80" r="16" fill="#15181d" stroke="#ff3b30" stroke-width="2.5"/>
+        <circle cx="80" cy="80" r="6" fill="#ff3b30"/>
+        <path d="M54 34 Q80 22 106 34" fill="none" stroke="#e8eef4" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <small>STEERING</small>
+  </div>
+  <div class="pedals">
+    <button class="pedal pedal-gas" id="btnGas" aria-label="Race pedal" type="button">
+      <svg class="pedalArt" viewBox="0 0 90 140" aria-hidden="true">
+        <defs>
+          <linearGradient id="gasStem" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8c0c8"/><stop offset=".5" stop-color="#e8eef4"/><stop offset="1" stop-color="#6a727a"/></linearGradient>
+          <linearGradient id="gasPad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3036"/><stop offset="1" stop-color="#0c0e10"/></linearGradient>
+          <linearGradient id="gasRubber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a9a48"/><stop offset="1" stop-color="#145c22"/></linearGradient>
+        </defs>
+        <rect x="38" y="2" width="14" height="18" rx="3" fill="url(#gasStem)"/>
+        <path d="M40 18h10l8 58H32z" fill="url(#gasStem)"/>
+        <ellipse cx="45" cy="86" rx="28" ry="10" fill="#1a1e22"/>
+        <path d="M18 84c0-6 12-10 27-10s27 4 27 10v42c0 8-12 14-27 14s-27-6-27-14z" fill="url(#gasPad)"/>
+        <path d="M22 90c0-4 10-7 23-7s23 3 23 7v34c0 5-10 9-23 9s-23-4-23-9z" fill="url(#gasRubber)"/>
+        <g stroke="#0a2010" stroke-width="2.2" stroke-linecap="round" opacity=".85">
+          <path d="M28 100h34M28 108h34M28 116h34"/>
+        </g>
+        <path d="M30 94h30" stroke="#7dff8a" stroke-width="2" opacity=".45"/>
+      </svg>
+      <b>RACE</b>
+    </button>
+    <button class="pedal pedal-brake" id="btnBrake" aria-label="Brake pedal" type="button">
+      <svg class="pedalArt" viewBox="0 0 100 130" aria-hidden="true">
+        <defs>
+          <linearGradient id="brkStem" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8c0c8"/><stop offset=".5" stop-color="#e8eef4"/><stop offset="1" stop-color="#6a727a"/></linearGradient>
+          <linearGradient id="brkPad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a1818"/><stop offset="1" stop-color="#1a0808"/></linearGradient>
+          <linearGradient id="brkRubber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c03030"/><stop offset="1" stop-color="#5a1010"/></linearGradient>
+        </defs>
+        <rect x="42" y="2" width="16" height="16" rx="3" fill="url(#brkStem)"/>
+        <path d="M45 16h10l12 30H33z" fill="url(#brkStem)"/>
+        <rect x="10" y="42" width="80" height="78" rx="8" fill="url(#brkPad)"/>
+        <rect x="16" y="48" width="68" height="66" rx="6" fill="url(#brkRubber)"/>
+        <rect x="16" y="48" width="68" height="12" rx="3" fill="#e05050" opacity=".9"/>
+        <g stroke="#2a0808" stroke-width="2.4" stroke-linecap="round">
+          <path d="M24 68h52M24 78h52M24 88h52M24 98h52"/>
+        </g>
+        <text x="50" y="112" text-anchor="middle" fill="#ffb0b0" font-size="9" font-family="Orbitron,sans-serif" font-weight="800">STOP</text>
+      </svg>
+      <b>BRAKE</b>
+    </button>
+  </div>
+  <button class="tbtn" id="btnRear" aria-label="Toggle rear view">↩<small>BACK</small></button>
+</div>
+
+<div class="garageOverlay" id="garageOverlay" style="display:none;">
+  <div class="garageCard">
+    <div class="garageHeading">
+      <div class="title">YOUR <span>GARAGE</span></div>
+      <div class="subtitle">Choose your machine before starting the race</div>
+      <div class="divider"></div>
+    </div>
+    <div class="garageGrid" id="garageGrid">
+      <button class="carChoice selected" data-car="apex" style="--car-color:#ff5a12" type="button">
+        <div class="carArt apexArt">
+          <svg viewBox="0 0 260 100" aria-hidden="true"><path d="M18 68 L32 52 Q48 46 78 44 L108 24 Q120 16 142 18 L174 22 Q190 26 204 44 L232 50 Q246 54 248 68 L240 76 L22 76Z" fill="#ff5a12" stroke="#ffb06a" stroke-width="2"/><path d="M94 44 L110 26 Q118 20 136 22 L168 26 Q178 28 190 44Z" fill="#9ad4ff"/><circle cx="70" cy="74" r="13" fill="#111"/><circle cx="198" cy="74" r="13" fill="#111"/></svg>
+        </div>
+        <div class="carName">APEX R</div><div class="carMeta">Balanced · 67 top speed</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-car="shadow" style="--car-color:#2c3038" type="button">
+        <div class="carCoins">🪙 1,000 COINS</div>
+        <div class="carArt photoArt">
+          <svg viewBox="0 0 260 100" aria-hidden="true"><path d="M20 70 L36 50 Q70 38 110 36 L140 20 Q156 14 176 20 L210 36 L236 52 Q250 58 248 70 L238 78 L24 78Z" fill="#3a4048" stroke="#8a94a0" stroke-width="2"/><path d="M108 38 L132 22 Q148 16 168 22 L200 38Z" fill="#6a8090"/><circle cx="72" cy="76" r="13" fill="#111"/><circle cx="196" cy="76" r="13" fill="#111"/></svg>
+        </div>
+        <div class="carName">SHADOW GT</div><div class="carMeta">Grip · 75 top speed</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-car="volt" style="--car-color:#e8eef4" type="button">
+        <div class="carCoins">🪙 1,800 COINS</div>
+        <div class="carArt photoArt">
+          <svg viewBox="0 0 260 100" aria-hidden="true"><path d="M16 66 L40 48 Q80 30 130 28 L170 18 Q190 16 214 36 L242 50 Q252 58 250 68 L240 76 L22 76Z" fill="#e8eef4" stroke="#7ec8ff" stroke-width="2"/><path d="M100 40 L128 22 Q150 16 176 24 L208 40Z" fill="#3a6a88"/><circle cx="68" cy="74" r="13" fill="#111"/><circle cx="200" cy="74" r="13" fill="#111"/></svg>
+        </div>
+        <div class="carName">VOLT X</div><div class="carMeta">Acceleration · 84 top speed</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-car="inferno" style="--car-color:#d41820" type="button">
+        <div class="carCoins">🪙 3,000 COINS</div>
+        <div class="carArt photoArt">
+          <svg viewBox="0 0 260 100" aria-hidden="true"><path d="M14 70 L30 48 Q60 34 100 32 L138 16 Q160 12 188 24 L230 44 Q250 54 248 70 L238 78 L20 78Z" fill="#d41820" stroke="#ff6a4a" stroke-width="2"/><path d="M96 36 L126 18 Q146 12 172 20 L206 38Z" fill="#1a2430"/><circle cx="66" cy="76" r="13" fill="#111"/><circle cx="198" cy="76" r="13" fill="#111"/></svg>
+        </div>
+        <div class="carName">INFERNO S</div><div class="carMeta">Power · 96 top speed</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+    </div>
+  </div>
+  <div class="garageDock">
+    <div class="garageHint">Selected: <b id="selectedCarName">APEX R</b><br>Balance: <b id="garageCoinsVal">0</b> coins</div>
+    <div class="dockAdGap" aria-hidden="true"></div>
+    <div class="garageActions">
+      <button class="storeGarageBtn" id="garageStoreBtn" type="button">🛒 STORE</button>
+      <button class="startbtn" id="garageContinueBtn">CONTINUE</button>
+    </div>
+  </div>
+</div>
+
+<div class="garageOverlay" id="trackOverlay" style="display:none;">
+  <div class="garageCard">
+    <div class="garageHeading">
+      <div class="title">SELECT <span>TRACK</span></div>
+      <div class="subtitle">Choose your circuit before the race</div>
+      <div class="divider"></div>
+    </div>
+    <div class="garageGrid" id="trackGrid" style="grid-template-columns:repeat(3,1fr);">
+      <button class="carChoice selected" data-track="classic" type="button">
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#1a2e1c,#2a4a2e 40%,#3a3d42);"><div style="font:800 14px Orbitron,sans-serif;color:#3ddc84;">GOLF<br>CLUB</div></div>
+        <div class="carName">GOLF CLUB CIRCUIT</div><div class="carMeta">Free · Country Club · 2 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="grandprix" type="button">
+        <div class="carCoins">🪙 500 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#0d1a2e,#1a3a5c);"><div style="font:800 14px Orbitron,sans-serif;color:#5eb0ff;">F1 TRACK</div></div>
+        <div class="carName">F1 GRAND PRIX</div><div class="carMeta">500 coins · Formula · 3 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="karting" type="button">
+        <div class="carCoins">🪙 900 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#1a1520,#3a2a4a);"><div style="font:800 14px Orbitron,sans-serif;color:#c9a0ff;">KARTING</div></div>
+        <div class="carName">KARTING CIRCUIT</div><div class="carMeta">900 coins · Technical · 4 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="street" type="button">
+        <div class="carCoins">🪙 1,400 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#1a1a1e,#ff5a12);"><div style="font:800 14px Orbitron,sans-serif;color:#ffb020;">CITY</div></div>
+        <div class="carName">CITY STREETS</div><div class="carMeta">1,400 coins · Downtown · 3 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="rally" type="button">
+        <div class="carCoins">🪙 2,000 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#2a3a1a,#5a6a30);"><div style="font:800 14px Orbitron,sans-serif;color:#b8d060;">JUNGLE</div></div>
+        <div class="carName">JUNGLE TRAIL</div><div class="carMeta">2,000 coins · Rainforest · 2 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="oval" type="button">
+        <div class="carCoins">🪙 2,600 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#2a1010,#5a2020);"><div style="font:800 14px Orbitron,sans-serif;color:#ff6a6a;">OVAL</div></div>
+        <div class="carName">HIGH-SPEED OVAL</div><div class="carMeta">2,600 coins · Tri-Oval · 5 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="island" type="button">
+        <div class="carCoins">🪙 3,200 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#0a2a3a,#1a6a5a);"><div style="font:800 14px Orbitron,sans-serif;color:#40e0d0;">ISLAND</div></div>
+        <div class="carName">JUNGLE ISLAND</div><div class="carMeta">3,200 coins · Scenic · 3 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="snow" type="button">
+        <div class="carCoins">🪙 4,000 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#c8d8e8,#8aa8c0);"><div style="font:800 14px Orbitron,sans-serif;color:#1a3a5c;">SNOW</div></div>
+        <div class="carName">SNOW CIRCUIT</div><div class="carMeta">4,000 coins · Icy Classic · 3 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+      <button class="carChoice locked" data-track="desert" type="button">
+        <div class="carCoins">🪙 5,000 COINS</div>
+        <div class="carArt trackPreview" style="background:linear-gradient(160deg,#e8a848,#c47a28);"><div style="font:800 14px Orbitron,sans-serif;color:#fff8e8;">DESERT</div></div>
+        <div class="carName">DESERT CIRCUIT</div><div class="carMeta">5,000 coins · Sandy Classic · 2 Laps</div>
+        <span class="cardAdBtn" role="button">See 5 Ads and win 500 coins</span>
+      </button>
+    </div>
+  </div>
+  <div class="garageDock">
+    <div class="garageHint">Selected: <b id="selectedTrackName">GOLF CLUB CIRCUIT</b><br>Balance: <b id="trackCoinsVal">0</b> coins</div>
+    <div class="dockAdGap" aria-hidden="true"></div>
+    <div class="garageActions">
+      <button class="storeGarageBtn" id="trackBackBtn" type="button">← BACK</button>
+      <button class="startbtn" id="trackContinueBtn">CONTINUE</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="startOverlay" style="display:none;">
+  <div class="card">
+    <div class="title">FORZA <span>LEGENDS</span></div>
+    <div class="subtitle" id="startSubtitle">2-Lap Grand Prix · 6 Rivals · Classic Circuit</div>
+    <div class="divider"></div>
+    <div class="instructions">
+      Race a PBR / HDR circuit against AI rivals.<br><br>
+      <b>PC:</b> <span class="key">WASD</span> or <span class="key">ARROW KEYS</span><br>
+      <b>Mobile:</b> Use the steering wheel and race / brake pedals.
+    </div>
+    <button class="startbtn" id="startBtn">START GAME</button>
+  </div>
+</div>
+
+<div class="storePanel" id="storePanel">
+  <div class="storeCard">
+    <button class="closeSettings" id="closeStore" aria-label="Close store">×</button>
+    <div class="storeTitle">GARAGE STORE</div>
+    <div class="storeBalance">🪙 <span id="storeCoinsVal">0</span> COINS</div>
+    <div class="dailyBox">
+      <b>🎁 DAILY REWARD</b>
+      <div id="dailyRewardText">Claim 100 coins today.</div>
+      <button class="miniBtn" id="dailyRewardBtn">CLAIM +100</button>
+    </div>
+    <div class="storeGrid">
+      <div class="storeItem">
+        <h3>🪙 1,000 COINS</h3>
+        <p>One-time Google Play purchase. Android Billing is used in the APK.</p>
+        <button id="buyCoinsBtn">BUY 1,000 COINS</button>
+      </div>
+      <div class="storeItem">
+        <h3>🚫 REMOVE ADS</h3>
+        <p>Removes interstitial ads. Purchase is restorable.</p>
+        <button id="buyRemoveAdsBtn">REMOVE ADS</button>
+      </div>
+    </div>
+    <button class="miniBtn" id="restoreBtn" style="width:100%;margin-top:12px;">🔄 RESTORE PURCHASES</button>
+    <div class="nativeStatus" id="nativeStatus">
+      Web preview: real AdMob/Google Play purchases activate when this game is packaged as the Android app.
+    </div>
+  </div>
+</div>
+
+<div class="overlay finishcard" id="finishOverlay" style="display:none;">
+  <div class="card">
+    <div class="title" id="finishTitle">RACE <span>COMPLETE</span></div>
+    <div class="subtitle" id="finishSubtitle">Final Standings</div>
+    <div class="rewardText" id="rewardText">+0 COINS<small>Total coins: 0</small></div>
+    <div class="resultsList" id="resultsList"></div>
+    <button class="miniBtn" id="rewardAdBtn" style="width:100%;margin-bottom:10px;">📺 WATCH AD → +100 COINS</button>
+    <button class="startbtn" id="restartBtn">RACE AGAIN</button>
+    <button class="exitbtn" id="finishMenuBtn">BACK TO MENU</button>
+  </div>
+</div>
+
+</body>
+</html>
+
+</body></html>
